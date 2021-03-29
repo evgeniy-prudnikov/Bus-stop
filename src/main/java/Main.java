@@ -1,6 +1,4 @@
-import java.io.File;
 import java.io.FileOutputStream;
-import java.text.ParseException;
 import java.util.*;
 
 public class Main {
@@ -12,11 +10,19 @@ public class Main {
 
         ArrayList<String> stringArray = ReadFileLineByLine.readFile(args[0]);
 
-        for (String str: stringArray) {
-            service.add(new Service(str));
-        }
+        for (String str : stringArray) {
+            Service ser = new Service(str);
+            if (!service.contains(ser))
+            service.add(ser);
 
-        for (Service bus: service) {
+            if (service.get(service.size() - 1).getArrivalTime() < 60 * 60 * 1000) {
+                service.add(new Service(str));
+                service.get(service.size() - 1).setDepartureTime(service.get(service.size() - 1).getDepartureTime() + 60 * 60 * 24 * 1000);
+                service.get(service.size() - 1).setArrivalTime(service.get(service.size() - 1).getArrivalTime() + 60 * 60 * 24 * 1000);
+                service.get(service.size() - 1).setEfficient(false);
+            }
+        }
+        for (Service bus : service) {
 
             if (bus.completeTime() < 60 * 60 * 1000) { //Any service longer than an hour shall not be included.
                 for (Service value : service) {
@@ -44,13 +50,13 @@ public class Main {
         service.sort(new Comparator<Service>() {
             @Override
             public int compare(Service service, Service t1) {
-                return (int)service.getDepartureTime() - (int)t1.getDepartureTime();
+                return (int) service.getDepartureTime() - (int) t1.getDepartureTime();
             }
         });
 
-        FileOutputStream fileOutputStream = new FileOutputStream("output.txt");
+        try (FileOutputStream fileOutputStream = new FileOutputStream("output.txt") ){
 
-        for (Service bus: service) {
+        for (Service bus : service) {
             if (bus.isEfficient()) {
                 if (bus.getCompany().equals("Posh")) {
                     String str = bus.getCompany() + " " + Service.showTime(bus.getDepartureTime()) + " " +
@@ -63,7 +69,7 @@ public class Main {
 
         fileOutputStream.write(new byte[]{13});
 
-        for (Service bus: service) {
+        for (Service bus : service) {
             if (bus.isEfficient()) {
                 if (bus.getCompany().equals("Grotty")) {
                     String str = bus.getCompany() + " " + Service.showTime(bus.getDepartureTime()) + " " +
@@ -74,11 +80,9 @@ public class Main {
             }
         }
         fileOutputStream.flush();
-        fileOutputStream.close();
+        }
+
     }
 }
-
-
-
 
 
