@@ -4,10 +4,9 @@ import java.util.Date;
 
 public class Service {
 
-    private String company;
+    private final String company;
     private long departureTime;
     private long arrivalTime;
-
 
     public Service(String str) throws ParseException {
         String[] strings = str.split(" ");
@@ -22,9 +21,10 @@ public class Service {
 
     @Override
     public boolean equals(Object obj) {
-        Service otherServ = (Service) obj;
-        return  ((this.departureTime == otherServ.departureTime) && (this.arrivalTime == otherServ.arrivalTime) && this.company.equals(otherServ.company));
-
+        if (obj instanceof Service) {
+            Service otherServ = (Service) obj;
+            return ((this.departureTime == otherServ.departureTime) && (this.arrivalTime == otherServ.arrivalTime) && this.company.equals(otherServ.company));
+        } else return this.equals(obj);
     }
 
     public boolean isEfficient() {
@@ -67,9 +67,6 @@ public class Service {
     public void setEfficient(boolean efficient) {
         isEfficient = efficient;
     }
-
-
-
 }
 
 

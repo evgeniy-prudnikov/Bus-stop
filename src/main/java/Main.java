@@ -24,7 +24,7 @@ public class Main {
         }
         for (Service bus : service) {
 
-            if (bus.completeTime() < 60 * 60 * 1000) { //Any service longer than an hour shall not be included.
+            if (bus.completeTime() <= 60 * 60 * 1000) { //Any service longer than an hour shall not be included.
                 for (Service value : service) {
                     if ((bus.getDepartureTime() == value.getDepartureTime()) && (bus.getArrivalTime() > value.getArrivalTime())) {
                         bus.setEfficient(false);
@@ -47,14 +47,9 @@ public class Main {
             }
         }
 
-        service.sort(new Comparator<Service>() {
-            @Override
-            public int compare(Service service, Service t1) {
-                return (int) service.getDepartureTime() - (int) t1.getDepartureTime();
-            }
-        });
+        service.sort(Comparator.comparingInt(service2 -> (int) service2.getDepartureTime()));
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream("output.txt") ){
+        try (FileOutputStream fileOutputStream = new FileOutputStream("output.txt")){
 
         for (Service bus : service) {
             if (bus.isEfficient()) {
@@ -79,7 +74,6 @@ public class Main {
                 }
             }
         }
-        fileOutputStream.flush();
         }
 
     }

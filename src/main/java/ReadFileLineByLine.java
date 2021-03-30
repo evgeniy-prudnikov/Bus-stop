@@ -6,19 +6,16 @@ import java.util.ArrayList;
 
 public class ReadFileLineByLine {
 
-    public static ArrayList<String> readFile(String path) {
+    public static ArrayList<String> readFile(String path)  {
         ArrayList<String> lines = new ArrayList<>();
 
-        try {
-            File file = new File(path);
-            FileReader fr = new FileReader(file);
+        File file = new File(path);
+
+        try(FileReader fr = new FileReader(file)) {
             BufferedReader reader = new BufferedReader(fr);
-            String line = reader.readLine();
-            int i = 0;
-            while (line != null) {
+            String line;
+            while ((line = reader.readLine()) != null)
                 lines.add(line);
-                line = reader.readLine();
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
