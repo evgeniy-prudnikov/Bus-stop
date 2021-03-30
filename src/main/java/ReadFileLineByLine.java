@@ -11,8 +11,8 @@ public class ReadFileLineByLine {
 
         File file = new File(path);
 
-        try(FileReader fr = new FileReader(file)) {
-            BufferedReader reader = new BufferedReader(fr);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
             String line;
             while ((line = reader.readLine()) != null)
                 lines.add(line);
